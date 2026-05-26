@@ -1,7 +1,7 @@
 import json
 import os
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import ttk
 
 class FoodItem:
     def __init__(self, name:str, calories_per_100g:float, carbs_per_100g:float, protein_per_100g:float, fat_per_100g:float):
@@ -36,42 +36,85 @@ class FoodDatabase:
     def __init__(self, filename):
         self.filename = filename
         self.food_items = [FoodItem("Chicken Breast", 165, 0, 31, 3.6), FoodItem("White Rice", 130, 28, 2.7, 0.3)]
-        pass
+        self.load()
+
+    def load(self):
+        if os.path.exists(self.filename):
+            with open(self.filename, 'r') as f:
+                data = json.load(f)
+                self.food_items = [FoodItem(**item) for item in data]
         
 
 class NutritionTrackerApp:
-    def __init__(self, window):
+    def __init__(self):
         self.food_db = FoodDatabase("food_database.json")
-
-        self.window = window
-        self.window.title("Nutrition Tracker")
-        self.window.geometry("800x500")
-        self.create_widgets()
-
-    def create_widgets(self):
-        nav = tk.Frame(self.window)
-        nav.pack(fill='x', pady=8)
-        tk.Button(nav, text="Today's Log", width=16)
-        tk.Button(nav, text='Food Database', width=16 )
-        tk.Button(nav, text='Summary', width=16 )
-        tk.Button(nav, text='Exit', width=16)
-
-    def food_log_screen(self):
-        tk.Label(self.window, text="Today's Food Log").pack(pady=6)
         
+        root = tk.Tk()
+        root.geometry('800x580')
+        root.title('Nutrition Tracker')
+
+        # create a notebook
+        notebook = ttk.Notebook(root)
+        notebook.pack(fill='both', expand=True)
+
+        # create frames
+        frame1 = ttk.Frame(notebook, width=800, height=580)
+        frame2 = ttk.Frame(notebook, width=800, height=580)
+        frame3 = ttk.Frame(notebook, width=800, height=580)
+
+        frame1.pack(fill='both', expand=True)
+        frame2.pack(fill='both', expand=True)
+        frame3.pack(fill='both', expand=True)
+
+        # add frames to notebook
+
+        notebook.add(frame1, text="Today's Food Log")
+        notebook.add(frame2, text="Food Database")
+        notebook.add(frame3, text="Nutrition Summary")
+
+        self.log_frame = frame1
+        self.database_frame = frame2
+        self.summary_frame = frame3
+        
+        self.load_food_log()
+        self.load_food_database()
+        self.load_nutrition_summary()
+        root.mainloop()
+
+    def load_food_log(self):
+        tk.Label(self.log_frame, text="Today's Food Log").pack(pady=6)
+        log_frame = tk.Frame(self.log_frame)
+        log_frame.pack(fill='both', expand=True, padx=8)
+        self.log_list = tk.Listbox(log_frame, width=100, height=16)
+        self.log_list.pack(side='left', fill='both', expand=True)
+        
+
+    def load_food_database(self):
+        tk.Label(self.database_frame, text="Food Database").pack(pady=6)
+        database_frame = tk.Frame(self.database_frame)
+        database_frame.pack(fill='both', expand=True, padx=8)
+        self.database_list = tk.Listbox(database_frame, width=120, height=16)
+        self.database_list.pack(side='left', fill='both', expand=True)
+
+        for food in self.food_db.food_items:
+            self.database_list.insert(tk.END,
+                f"{food.name} — {food.calories_per_100g} kcal | {food.carbs_per_100g}g carbs | {food.protein_per_100g}g protein | {food.fat_per_100g}g fat"
+            )
     
-    def run(self):
-        self.window.mainloop()
+    def load_nutrition_summary(self):
+        tk.Label(self.summary_frame, text="Nutrition Summary").pack(pady=6)
+        self.summary = tk.Label(self.summary_frame, text="Total Calories: 0\nTotal Carbs: 0g\nTotal Protein: 0g\nTotal Fat: 0g", justify='left')
+        self.summary.pack(pady=4)
 
 class Foodlog:
     def __init__(self, filename):
         self.filename = filename
-        self.entries = []
-        pass
+        self.food_entries = []
+
+        
         
 
 if __name__ == "__main__":
-    main_window = NutritionTrackerApp(tk.Tk())
-    main_window.run()
+    app = NutritionTrackerApp()
 
     
