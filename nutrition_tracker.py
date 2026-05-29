@@ -1,7 +1,8 @@
 import json
 import os
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox, simpledialog
+from typing import List,Tuple
 
 class FoodItem:
     def __init__(self, name:str, calories_per_100g:float, carbs_per_100g:float, protein_per_100g:float, fat_per_100g:float):
@@ -43,7 +44,9 @@ class FoodDatabase:
             with open(self.filename, 'r') as f:
                 data = json.load(f)
                 self.food_items = [FoodItem(**item) for item in data]
-        
+
+    def add_food_item(self, food_item:FoodItem):
+        self.food_items.append(food_item)        
 
 class NutritionTrackerApp:
     def __init__(self):
@@ -88,6 +91,7 @@ class NutritionTrackerApp:
         self.log_list = tk.Listbox(log_frame, width=100, height=16)
         self.log_list.pack(side='left', fill='both', expand=True)
         
+        tk.Button(text="Add Food", command=self.add_food_entry).pack(pady=4)
 
     def load_food_database(self):
         tk.Label(self.database_frame, text="Food Database").pack(pady=6)
@@ -106,10 +110,42 @@ class NutritionTrackerApp:
         self.summary = tk.Label(self.summary_frame, text="Total Calories: 0\nTotal Carbs: 0g\nTotal Protein: 0g\nTotal Fat: 0g", justify='left')
         self.summary.pack(pady=4)
 
+    def add_food_entry(self):
+        entry=messagebox.askquestion("Add Food", "Would you like to add a food item from the database or create a custom entry?")
+        if entry == 'yes':
+            try:
+                selected_food=self.food_db.food_items[self.database_list.curselection()[0]]
+                grams = float(simpledialog.askstring("Grams", f"How many grams of {selected_food.name} did you eat?"))
+                self.food_log.add_entry(selected_food, grams)
+            except IndexError:
+                messagebox.showerror("Error", "Please select a food item from the database.")
+        else:
+            messagebox.showerror("Error", "Custom food entry not implemented yet.")
+
 class Foodlog:
     def __init__(self, filename):
         self.filename = filename
         self.food_entries = []
+    
+    def load(self):
+        if os.path.exists(self.filename):
+            with open(self.filename, 'r') as f:
+                self.food_entries = json.load(f)
+        self.food_entries = []
+        for entry in self.food_entries:
+            name = entry['food']['name']
+            calories_per_100g = entry['food']['calories_per_100g']
+            if entry:
+                self.food_entries.append({
+                    'food': FoodItem(name, calories_per_100g, entry['food']['carbs_per_100g'], entry['food']['protein_per_100g'], entry['food']['fat_per_100g']),
+                    'grams': entry['grams']
+                })
+    
+    def add_entry(self, food_item:FoodItem, grams:float):
+        self.food_entries.append({
+            'food': food_item.to_dict(),
+            'grams': grams
+        })
 
         
         
