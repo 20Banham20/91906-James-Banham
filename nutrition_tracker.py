@@ -1,4 +1,5 @@
 import json
+from logging import root
 import os
 import tkinter as tk
 from tkinter import ttk, messagebox, simpledialog
@@ -46,7 +47,11 @@ class FoodDatabase:
                 self.food_items = [FoodItem(**item) for item in data]
 
     def add_food_item(self, food_item:FoodItem):
-        self.food_items.append(food_item)        
+        self.food_items.append(food_item)  
+
+    def save(self):
+        with open(self.filename, 'w') as f:
+            json.dump([food.to_dict() for food in self.food_items], f, indent=2)      
 
 class NutritionTrackerApp:
     def __init__(self):
@@ -92,6 +97,7 @@ class NutritionTrackerApp:
         self.log_list.pack(side='left', fill='both', expand=True)
         
         tk.Button(text="Add Food", command=self.add_food_entry).pack(pady=4)
+        tk.Button(text="Save Log", command=self.save_food_database).pack(pady=4)
 
     def load_food_database(self):
         tk.Label(self.database_frame, text="Food Database").pack(pady=6)
@@ -111,16 +117,24 @@ class NutritionTrackerApp:
         self.summary.pack(pady=4)
 
     def add_food_entry(self):
-        entry=messagebox.askquestion("Add Food", "Would you like to add a food item from the database or create a custom entry?")
+        entry=messagebox.askquestion("Add Food", "Would you like to create a custom entry for the database?")
         if entry == 'yes':
-            try:
-                selected_food=self.food_db.food_items[self.database_list.curselection()[0]]
-                grams = float(simpledialog.askstring("Grams", f"How many grams of {selected_food.name} did you eat?"))
-                self.food_log.add_entry(selected_food, grams)
-            except IndexError:
-                messagebox.showerror("Error", "Please select a food item from the database.")
-        else:
-            messagebox.showerror("Error", "Custom food entry not implemented yet.")
+            name = simpledialog.askstring("Food Name", "Enter the name of the food item:")
+            calories = float(simpledialog.askstring("Calories per 100g", f"Enter calories per 100g for {name}:"))
+            carbs = float(simpledialog.askstring("Carbs per 100g", f"Enter carbs per 100g for {name}:"))
+            protein = float(simpledialog.askstring("Protein per 100g", f"Enter protein per 100g for {name}:"))
+            fat = float(simpledialog.askstring("Fat per 100g", f"Enter fat per 100g for {name}:"))
+            new_food = FoodItem(name, calories, carbs, protein, fat)
+            self.food_db.add_food_item(new_food)
+            self.database_list.insert(tk.END,
+                f"{new_food.name} — {new_food.calories_per_100g} kcal | {new_food.carbs_per_100g}g carbs | {new_food.protein_per_100g}g protein | {new_food.fat_per_100g}g fat"
+            )
+            
+
+    def save_food_database(self):
+        self.food_db.save()
+        messagebox.showinfo("Save Database", "Food database saved successfully.")
+
 
 class Foodlog:
     def __init__(self, filename):
@@ -146,6 +160,20 @@ class Foodlog:
             'food': food_item.to_dict(),
             'grams': grams
         })
+        entry=messagebox.askquestion("Add Food", "Would you like to add a custom food item to the foodlog?")
+        if entry == 'yes':
+            try:
+                selected_food=self.food_db.food_items[self.database_list.curselection()[0]]
+                self.food_entries.append({
+                'food': food_item.to_dict(),
+                'grams': grams
+             })
+                grams = float(simpledialog.askstring("Grams", f"How many grams of {selected_food.name} did you eat?"))
+                self.food_log.add_entry(selected_food, grams)
+            except IndexError:
+                messagebox.showerror("Error", "Please select a food item from the database.")
+        else:
+            messagebox.showerror("Error", "Custom food entry not implemented yet.")
 
         
         
