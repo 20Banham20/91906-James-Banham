@@ -51,7 +51,14 @@ class FoodDatabase:
 
     def save(self):
         with open(self.filename, 'w') as f:
-            json.dump([food.to_dict() for food in self.food_items], f, indent=2)      
+            json.dump([food.to_dict() for food in self.food_items], f, indent=2)    
+
+    def remove_food_item(self, database: int):
+        if 0 <= database < len(self.food_items):
+            del self.food_items[database]
+            self.save()
+        else:
+            raise IndexError("Food item index out of range.")  
 
 class NutritionTrackerApp:
     def __init__(self):
@@ -96,8 +103,7 @@ class NutritionTrackerApp:
         self.log_list = tk.Listbox(log_frame, width=100, height=16)
         self.log_list.pack(side='left', fill='both', expand=True)
         
-        tk.Button(text="Add Food", command=self.add_food_entry).pack(pady=4)
-        tk.Button(text="Save Log", command=self.save_food_database).pack(pady=4)
+
 
     def load_food_database(self):
         tk.Label(self.database_frame, text="Food Database").pack(pady=6)
@@ -110,7 +116,12 @@ class NutritionTrackerApp:
             self.database_list.insert(tk.END,
                 f"{food.name} — {food.calories_per_100g} kcal | {food.carbs_per_100g}g carbs | {food.protein_per_100g}g protein | {food.fat_per_100g}g fat"
             )
-    
+
+        tk.Button(self.database_frame,text="Add Food", command=self.add_food_entry).pack(side='left', padx=4,pady=4)
+        tk.Button(self.database_frame,text="Save Database", command=self.save_food_database).pack(side='left', padx=4,pady=4)
+        tk.Button(self.database_frame,text="Delete Food Item", command=self.delete_food_item).pack(side='left', padx=4,pady=4)
+        tk.Button(self.database_frame,text="Edit Food Item", command=self.edit_food_entry).pack(side='left', padx=4,pady=4)
+
     def load_nutrition_summary(self):
         tk.Label(self.summary_frame, text="Nutrition Summary").pack(pady=6)
         self.summary = tk.Label(self.summary_frame, text="Total Calories: 0\nTotal Carbs: 0g\nTotal Protein: 0g\nTotal Fat: 0g", justify='left')
@@ -134,6 +145,40 @@ class NutritionTrackerApp:
     def save_food_database(self):
         self.food_db.save()
         messagebox.showinfo("Save Database", "Food database saved successfully.")
+
+    def delete_food_item(self):
+        try:
+            selected_index = self.database_list.curselection()[0]
+            self.database_list.delete(selected_index)
+            self.food_db.remove_food_item(selected_index)
+
+        except IndexError:
+            messagebox.showerror("Error", "Please select a food item to delete.")
+
+    def edit_food_entry(self):
+        try:
+            selected = self.database_list.curselection()[0]
+            food_item = self.food_db.food_items[selected]
+            name = simpledialog.askstring("Food Name", "Enter the name of the food item:")
+            if name is None:
+                messagebox.showerror("Error", "Food name cannot be empty.")
+                return
+            else:
+                calories = float(simpledialog.askstring("Calories per 100g", f"Enter calories per 100g for {name}:"))
+                carbs = float(simpledialog.askstring("Carbs per 100g", f"Enter carbs per 100g for {name}:"))
+                protein = float(simpledialog.askstring("Protein per 100g", f"Enter protein per 100g for {name}:"))
+                fat = float(simpledialog.askstring("Fat per 100g", f"Enter fat per 100g for {name}:"))
+                food_item.name = name
+                food_item.calories_per_100g = calories
+                food_item.carbs_per_100g = carbs
+                food_item.protein_per_100g = protein
+                food_item.fat_per_100g = fat
+                self.database_list.delete(selected)
+                self.database_list.insert(selected,
+                    f"{food_item.name} — {food_item.calories_per_100g} kcal | {food_item.carbs_per_100g}g carbs | {food_item.protein_per_100g}g protein | {food_item.fat_per_100g}g fat"
+                )
+        except IndexError:
+            messagebox.showerror("Error", "Please select a food item to edit.")
 
 
 class Foodlog:
