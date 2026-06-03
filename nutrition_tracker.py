@@ -63,6 +63,7 @@ class FoodDatabase:
 class NutritionTrackerApp:
     def __init__(self):
         self.food_db = FoodDatabase("food_database.json")
+        self.food_log = Foodlog("food_log.json")
         
         root = tk.Tk()
         root.geometry('800x580')
@@ -103,6 +104,10 @@ class NutritionTrackerApp:
         self.log_list = tk.Listbox(log_frame, width=100, height=16)
         self.log_list.pack(side='left', fill='both', expand=True)
         
+        tk.Button(self.log_frame,text="Add Food", command=self.add_food_log).pack(side='left', padx=4,pady=4)
+        tk.Button(self.log_frame,text="Save Log", command=self.save_food_log).pack(side='left', padx=4,pady=4)
+        tk.Button(self.log_frame,text="Delete Food Item", command=self.delete_log_entry).pack(side='left', padx=4,pady=4)
+        tk.Button(self.log_frame,text="Edit Food Item", command=self.edit_food_log).pack(side='left', padx=4,pady=4)
 
 
     def load_food_database(self):
@@ -180,6 +185,41 @@ class NutritionTrackerApp:
         except IndexError:
             messagebox.showerror("Error", "Please select a food item to edit.")
 
+
+    def add_food_log(self, food_item:FoodItem=None, grams:float=None):
+        if food_item is None or grams is None:
+            entry=messagebox.askquestion("Add Food", "Would you like to add a custom food item to the foodlog?")
+            if entry == 'yes':
+                items='\n'.join([f"{i}. {food.name}" for i, food in enumerate(self.food_db.food_items)])
+            else:
+                food_entry_name=simpledialog.askstring("Food Item", f"Select a food item from the database:\n{items}")
+                if food_entry_name is None:
+                    messagebox.showerror("Error", "Food item selection cannot be empty.")
+                    return
+                try:
+                    selected_food = self.food_db.food_items[int(food_entry_name)]
+                    grams = float(simpledialog.askstring("Grams", f"How many grams of {selected_food.name} did you eat?"))
+                    if grams <= 0:
+                        messagebox.showerror("Error", "Grams must be a positive number.")
+                        return
+                    self.log_list.insert(tk.END, f"{selected_food.name} — {grams}g")
+                    self.food_log.add_entry(selected_food, grams)
+                except (IndexError, ValueError):
+                    messagebox.showerror("Error", "Invalid food item selection or grams input.")
+                else:
+                    messagebox.showerror("Error", "Custom food entry not implemented yet.")
+        else:
+            self.food_log.add_entry(food_item, grams)
+        
+
+    def save_food_log(self):
+        pass
+
+    def delete_log_entry(self):
+        pass
+
+    def edit_food_log(self):
+        pass
 
 class Foodlog:
     def __init__(self, filename):
