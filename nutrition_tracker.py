@@ -191,19 +191,16 @@ class NutritionTrackerApp:
             entry=messagebox.askquestion("Add Food", "Would you like to add a custom food item to the foodlog?")
             if entry == 'yes':
                 items='\n'.join([f"{i}. {food.name}" for i, food in enumerate(self.food_db.food_items)])
-            else:
                 food_entry_name=simpledialog.askstring("Food Item", f"Select a food item from the database:\n{items}")
-                if food_entry_name is None:
-                    messagebox.showerror("Error", "Food item selection cannot be empty.")
-                    return
                 try:
-                    selected_food = self.food_db.food_items[int(food_entry_name)]
-                    grams = float(simpledialog.askstring("Grams", f"How many grams of {selected_food.name} did you eat?"))
+                    selected_index = int(food_entry_name.split('.')[0])
+                    food_entry_name = self.food_db.food_items[selected_index].name
+                    grams = float(simpledialog.askstring("Grams", f"How many grams of {food_entry_name} did you eat?"))
                     if grams <= 0:
                         messagebox.showerror("Error", "Grams must be a positive number.")
                         return
-                    self.log_list.insert(tk.END, f"{selected_food.name} — {grams}g")
-                    self.food_log.add_entry(selected_food, grams)
+                    self.log_list.insert(tk.END, f"{food_entry_name} — {grams}g - {self.food_db.food_items[selected_index].get_nutrition(grams)['calories']} kcal - {self.food_db.food_items[selected_index].get_nutrition(grams)['carbs']}g carbs - {self.food_db.food_items[selected_index].get_nutrition(grams)['protein']}g protein - {self.food_db.food_items[selected_index].get_nutrition(grams)['fat']}g fat")
+                    self.food_log.add_entry(self.food_db.food_items[selected_index], grams)
                 except (IndexError, ValueError):
                     messagebox.showerror("Error", "Invalid food item selection or grams input.")
                 else:
@@ -213,7 +210,8 @@ class NutritionTrackerApp:
         
 
     def save_food_log(self):
-        pass
+        self.food_log.save()
+        messagebox.showinfo("Save Log", "Food log saved successfully.")
 
     def delete_log_entry(self):
         pass
@@ -225,43 +223,21 @@ class Foodlog:
     def __init__(self, filename):
         self.filename = filename
         self.food_entries = []
+
+    def save(self):
+        with open(self.filename, 'w') as f:
+            json.dump(self.food_entries, f, indent=2)
     
     def load(self):
         if os.path.exists(self.filename):
             with open(self.filename, 'r') as f:
                 self.food_entries = json.load(f)
-        self.food_entries = []
-        for entry in self.food_entries:
-            name = entry['food']['name']
-            calories_per_100g = entry['food']['calories_per_100g']
-            if entry:
-                self.food_entries.append({
-                    'food': FoodItem(name, calories_per_100g, entry['food']['carbs_per_100g'], entry['food']['protein_per_100g'], entry['food']['fat_per_100g']),
-                    'grams': entry['grams']
-                })
+                self.food_entries = [FoodItem(**entry) for entry in self.food_entries]
     
-    def add_entry(self, food_item:FoodItem, grams:float):
-        self.food_entries.append({
-            'food': food_item.to_dict(),
-            'grams': grams
-        })
-        entry=messagebox.askquestion("Add Food", "Would you like to add a custom food item to the foodlog?")
-        if entry == 'yes':
-            try:
-                selected_food=self.food_db.food_items[self.database_list.curselection()[0]]
-                self.food_entries.append({
-                'food': food_item.to_dict(),
-                'grams': grams
-             })
-                grams = float(simpledialog.askstring("Grams", f"How many grams of {selected_food.name} did you eat?"))
-                self.food_log.add_entry(selected_food, grams)
-            except IndexError:
-                messagebox.showerror("Error", "Please select a food item from the database.")
-        else:
-            messagebox.showerror("Error", "Custom food entry not implemented yet.")
 
-        
-        
+    def add_entry(self, food_item:FoodItem, grams:float):
+        self.food_entries.append((food_item, grams))
+          
 
 if __name__ == "__main__":
     app = NutritionTrackerApp()
