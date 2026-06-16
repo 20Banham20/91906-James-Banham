@@ -45,6 +45,7 @@ class FoodDatabase:
             with open(self.filename, 'r') as f:
                 data = json.load(f)
                 self.food_items = [FoodItem(**item) for item in data]
+            
 
     def add_food_item(self, food_item:FoodItem):
         self.food_items.append(food_item)  
@@ -203,8 +204,8 @@ class NutritionTrackerApp:
                     self.food_log.add_entry(self.food_db.food_items[selected_index], grams)
                 except (IndexError, ValueError):
                     messagebox.showerror("Error", "Invalid food item selection or grams input.")
-                else:
-                    messagebox.showerror("Error", "Custom food entry not implemented yet.")
+            else:
+                messagebox.showerror("Error", "Custom food entry not implemented yet.")
         else:
             self.food_log.add_entry(food_item, grams)
         
@@ -223,17 +224,28 @@ class Foodlog:
     def __init__(self, filename):
         self.filename = filename
         self.food_entries = []
+        self.load()
 
     def save(self):
-        with open(self.filename, 'w') as f:
-            json.dump(self.food_entries, f, indent=2)
+            data = []
+            for food_item, grams in self.food_entries:
+                data.append({
+                    "food": food_item.to_dict(),
+                    "grams": grams
+                })
+            with open(self.filename, 'w') as f:
+                json.dump(data, f, indent=2)
     
     def load(self):
         if os.path.exists(self.filename):
             with open(self.filename, 'r') as f:
-                self.food_entries = json.load(f)
-                self.food_entries = [FoodItem(**entry) for entry in self.food_entries]
-    
+                data = json.load(f)
+                self.food_entries = []
+                for entry in data:
+                    food_data = entry["food"]
+                    food_item = FoodItem(**food_data)
+                    grams = entry["grams"]
+                    self.food_entries.append((food_item, grams))
 
     def add_entry(self, food_item:FoodItem, grams:float):
         self.food_entries.append((food_item, grams))

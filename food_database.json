@@ -1,0 +1,51 @@
+[
+  {
+    "name": "Chicken Breast",
+    "calories_per_100g": 165,
+    "carbs_per_100g": 0,
+    "protein_per_100g": 31,
+    "fat_per_100g": 3.6
+  },
+  {
+    "name": "White Rice",
+    "calories_per_100g": 130,
+    "carbs_per_100g": 28,
+    "protein_per_100g": 2.7,
+    "fat_per_100g": 0.3
+  },
+  {
+    "name": "carrot",
+    "calories_per_100g": 41.0,
+    "carbs_per_100g": 9.6,
+    "protein_per_100g": 0.9,
+    "fat_per_100g": 0.2
+  },
+  {
+    "name": "broccoli",
+    "calories_per_100g": 34.0,
+    "carbs_per_100g": 6.6,
+    "protein_per_100g": 2.8,
+    "fat_per_100g": 0.4
+  },
+  {
+    "name": "minced beef",
+    "calories_per_100g": 254.0,
+    "carbs_per_100g": 0.0,
+    "protein_per_100g": 17.17,
+    "fat_per_100g": 20.0
+  },
+  {
+    "name": "Potato",
+    "calories_per_100g": 77.0,
+    "carbs_per_100g": 17.58,
+    "protein_per_100g": 2.02,
+    "fat_per_100g": 0.1
+  },
+  {
+    "name": "Kumara",
+    "calories_per_100g": 86.0,
+    "carbs_per_100g": 20.1,
+    "protein_per_100g": 1.6,
+    "fat_per_100g": 0.2
+  }
+]
