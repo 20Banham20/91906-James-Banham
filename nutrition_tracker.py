@@ -104,6 +104,12 @@ class NutritionTrackerApp:
         log_frame.pack(fill='both', expand=True, padx=8)
         self.log_list = tk.Listbox(log_frame, width=100, height=16)
         self.log_list.pack(side='left', fill='both', expand=True)
+
+        for food, grams in self.food_log.food_entries:
+            nutrition = food.get_nutrition(grams)
+            self.log_list.insert(tk.END,
+                f"{food.name} — {grams}g - {nutrition['calories']:.1f} kcal - {nutrition['carbs']:.1f}g carbs - {nutrition['protein']:.1f}g protein - {nutrition['fat']:.1f}g fat"
+            )
         
         tk.Button(self.log_frame,text="Add Food", command=self.add_food_log).pack(side='left', padx=4,pady=4)
         tk.Button(self.log_frame,text="Save Log", command=self.save_food_log).pack(side='left', padx=4,pady=4)
@@ -132,6 +138,12 @@ class NutritionTrackerApp:
         tk.Label(self.summary_frame, text="Nutrition Summary").pack(pady=6)
         self.summary = tk.Label(self.summary_frame, text="Total Calories: 0\nTotal Carbs: 0g\nTotal Protein: 0g\nTotal Fat: 0g", justify='left')
         self.summary.pack(pady=4)
+        if self.food_log.food_entries:
+            total_calories = sum(food.get_nutrition(grams)['calories'] for food, grams in self.food_log.food_entries)
+            total_carbs = sum(food.get_nutrition(grams)['carbs'] for food, grams in self.food_log.food_entries)
+            total_protein = sum(food.get_nutrition(grams)['protein'] for food, grams in self.food_log.food_entries)
+            total_fat = sum(food.get_nutrition(grams)['fat'] for food, grams in self.food_log.food_entries)
+            self.summary.config(text=f"Total Calories: {total_calories:.1f}\nTotal Carbs: {total_carbs:.1f}g\nTotal Protein: {total_protein:.1f}g\nTotal Fat: {total_fat:.1f}g")
 
     def add_food_entry(self):
         entry=messagebox.askquestion("Add Food", "Would you like to create a custom entry for the database?")
@@ -208,6 +220,7 @@ class NutritionTrackerApp:
                 messagebox.showerror("Error", "Custom food entry not implemented yet.")
         else:
             self.food_log.add_entry(food_item, grams)
+            self.food_log.save()
         
 
     def save_food_log(self):
@@ -215,10 +228,31 @@ class NutritionTrackerApp:
         messagebox.showinfo("Save Log", "Food log saved successfully.")
 
     def delete_log_entry(self):
-        pass
+        try:
+            selected_index = self.log_list.curselection()[0]
+            self.log_list.delete(selected_index)
+            self.food_log.remove_entry(selected_index)
+
+        except IndexError:
+            messagebox.showerror("Error", "Please select a food entry to delete.")
 
     def edit_food_log(self):
-        pass
+        try:
+            selected_index = self.log_list.curselection()[0]
+            food_item, grams = self.food_log.food_entries[selected_index]
+            new_grams = float(simpledialog.askstring("Edit Grams", f"Enter new grams for {food_item.name} (current: {grams}g):"))
+            if new_grams <= 0:
+                messagebox.showerror("Error", "Grams must be a positive number.")
+                return
+            self.food_log.food_entries[selected_index] = (food_item, new_grams)
+            nutrition = food_item.get_nutrition(new_grams)
+            self.log_list.delete(selected_index)
+            self.log_list.insert(selected_index, f"{food_item.name} — {new_grams}g - {nutrition['calories']} kcal - {nutrition['carbs']}g carbs - {nutrition['protein']}g protein - {nutrition['fat']}g fat")
+            self.food_log.save()
+        except IndexError:
+            messagebox.showerror("Error", "Please select a food entry to edit.")
+        except ValueError:
+            messagebox.showerror("Error", "Invalid input for grams.")
 
 class Foodlog:
     def __init__(self, filename):
@@ -226,29 +260,40 @@ class Foodlog:
         self.food_entries = []
         self.load()
 
-    def save(self):
-            data = []
-            for food_item, grams in self.food_entries:
-                data.append({
-                    "food": food_item.to_dict(),
-                    "grams": grams
-                })
-            with open(self.filename, 'w') as f:
-                json.dump(data, f, indent=2)
-    
     def load(self):
+        self.food_entries = []
+
         if os.path.exists(self.filename):
+            print("Found file:", self.filename)
+
             with open(self.filename, 'r') as f:
                 data = json.load(f)
-                self.food_entries = []
-                for entry in data:
-                    food_data = entry["food"]
-                    food_item = FoodItem(**food_data)
-                    grams = entry["grams"]
-                    self.food_entries.append((food_item, grams))
+
+            self.food_entries = [
+                (FoodItem(**entry['food_item']), entry['grams'])
+                for entry in data
+            ]
+        
+    def display_log(self, log_list:tk.Listbox):
+        log_list.delete(0, tk.END)
+        for food_item, grams in self.food_entries:
+            nutrition = food_item.get_nutrition(grams)
+            log_list.insert(tk.END, f"{food_item.name} — {grams}g - {nutrition['calories']} kcal - {nutrition['carbs']}g carbs - {nutrition['protein']}g protein - {nutrition['fat']}g fat")
 
     def add_entry(self, food_item:FoodItem, grams:float):
         self.food_entries.append((food_item, grams))
+
+    def save(self):
+        with open(self.filename, 'w') as f:
+            json.dump([{'food_item': food.to_dict(), 'grams': grams} for food, grams in self.food_entries], f, indent=2)    
+
+    def remove_entry(self, log_list_index: int):
+        if 0 <= log_list_index < len(self.food_entries):
+            del self.food_entries[log_list_index]
+            self.save()
+        else:
+            raise IndexError("Food item index out of range.")  
+        
           
 
 if __name__ == "__main__":

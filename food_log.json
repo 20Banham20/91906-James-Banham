@@ -1,2 +1,12 @@
-
-    
+[
+  {
+    "food_item": {
+      "name": "Kumara",
+      "calories_per_100g": 86.0,
+      "carbs_per_100g": 20.1,
+      "protein_per_100g": 1.6,
+      "fat_per_100g": 0.2
+    },
+    "grams": 200.0
+  }
+]
