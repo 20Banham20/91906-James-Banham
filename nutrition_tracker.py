@@ -144,6 +144,8 @@ class NutritionTrackerApp:
             total_protein = sum(food.get_nutrition(grams)['protein'] for food, grams in self.food_log.food_entries)
             total_fat = sum(food.get_nutrition(grams)['fat'] for food, grams in self.food_log.food_entries)
             self.summary.config(text=f"Total Calories: {total_calories:.1f}\nTotal Carbs: {total_carbs:.1f}g\nTotal Protein: {total_protein:.1f}g\nTotal Fat: {total_fat:.1f}g")
+        
+        tk.Button(self.summary_frame,text="Refresh Summary", command=self.refresh_nutrition_summary).pack(pady=4)
 
     def add_food_entry(self):
         entry=messagebox.askquestion("Add Food", "Would you like to create a custom entry for the database?")
@@ -241,6 +243,9 @@ class NutritionTrackerApp:
             selected_index = self.log_list.curselection()[0]
             food_item, grams = self.food_log.food_entries[selected_index]
             new_grams = float(simpledialog.askstring("Edit Grams", f"Enter new grams for {food_item.name} (current: {grams}g):"))
+            if not self.float_validation(str(new_grams)):
+                messagebox.showerror("Error", "Please enter a valid number for grams.")
+                return edit_food_log()
             if new_grams <= 0:
                 messagebox.showerror("Error", "Grams must be a positive number.")
                 return
@@ -253,6 +258,44 @@ class NutritionTrackerApp:
             messagebox.showerror("Error", "Please select a food entry to edit.")
         except ValueError:
             messagebox.showerror("Error", "Invalid input for grams.")
+
+    def refresh_nutrition_summary(self):
+        if self.food_log.food_entries:
+            total_calories = sum(food.get_nutrition(grams)['calories'] for food, grams in self.food_log.food_entries)
+            total_carbs = sum(food.get_nutrition(grams)['carbs'] for food, grams in self.food_log.food_entries)
+            total_protein = sum(food.get_nutrition(grams)['protein'] for food, grams in self.food_log.food_entries)
+            total_fat = sum(food.get_nutrition(grams)['fat'] for food, grams in self.food_log.food_entries)
+            self.summary.config(text=f"Total Calories: {total_calories:.1f}\nTotal Carbs: {total_carbs:.1f}g\nTotal Protein: {total_protein:.1f}g\nTotal Fat: {total_fat:.1f}g")
+
+    def int_validation(self, value_if_allowed):
+        try:
+            if value_if_allowed == "":
+                return True
+            float(value_if_allowed)
+            return True
+        except ValueError:
+            return False
+        
+    def float_validation(self, value_if_allowed):
+        try:
+            if value_if_allowed == "":
+                return True
+            float(value_if_allowed)
+            return True
+        except ValueError:
+            return False
+        
+    def non_empty_validation(self, value_if_allowed):
+        try:
+            if value_if_allowed.strip() == "":
+                return False
+            return True
+        except ValueError:
+            return False
+    
+          
+        
+        
 
 class Foodlog:
     def __init__(self, filename):
