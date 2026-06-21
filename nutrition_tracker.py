@@ -151,6 +151,7 @@ class NutritionTrackerApp:
         entry=messagebox.askquestion("Add Food", "Would you like to create a custom entry for the database?")
         if entry == 'yes':
             name = simpledialog.askstring("Food Name", "Enter the name of the food item:")
+            self.non_empty_validation(name)
             calories = float(simpledialog.askstring("Calories per 100g", f"Enter calories per 100g for {name}:"))
             carbs = float(simpledialog.askstring("Carbs per 100g", f"Enter carbs per 100g for {name}:"))
             protein = float(simpledialog.askstring("Protein per 100g", f"Enter protein per 100g for {name}:"))
@@ -183,6 +184,8 @@ class NutritionTrackerApp:
             food_item = self.food_db.food_items[selected]
             name = simpledialog.askstring("Food Name", "Enter the name of the food item:")
             if name is None:
+                return
+            if not self.non_empty_validation(name):
                 messagebox.showerror("Error", "Food name cannot be empty.")
                 return
             else:
@@ -212,16 +215,17 @@ class NutritionTrackerApp:
                 try:
                     items='\n'.join([f"{i}. {food.name}" for i, food in enumerate(self.food_db.food_items)] )
                     food_entry_name=simpledialog.askstring("Food Item", f"Select a food item from the database:\n{items}")
-                    if food_entry_name.strip():
-                        food_entry_name = int(food_entry_name)
-                    else:
-                        messagebox.showerror("Error", "Food item selection cannot be empty.")
+                    if food_entry_name is None:
                         return
+                    if not self.int_validation(food_entry_name):
+                        messagebox.showerror("Error","Please enter a valid food item number.")
+                        return
+                    food_entry_name = int(food_entry_name)
                 except ValueError:
                     messagebox.showerror("Error", "Please enter a valid number for food item selection.")
                     return
                 try:
-                    selected_index = int(food_entry_name.split('.')[0])
+                    selected_index = int(food_entry_name)
                     food_entry_name = self.food_db.food_items[selected_index].name
                     grams = float(simpledialog.askstring("Grams", f"How many grams of {food_entry_name} did you eat?"))
                     if not self.float_validation(str(grams)):
@@ -257,12 +261,16 @@ class NutritionTrackerApp:
         try:
             selected_index = self.log_list.curselection()[0]
             food_item, grams = self.food_log.food_entries[selected_index]
-            new_grams = float(simpledialog.askstring("Edit Grams", f"Enter new grams for {food_item.name} (current: {grams}g):"))
-            if not self.float_validation(str(new_grams)):
-                messagebox.showerror("Error", "Please enter a valid number for grams.")
-            if new_grams <= 0:
-                messagebox.showerror("Error", "Grams must be a positive number.")
+            new_grams = (simpledialog.askstring("Edit Grams", f"Enter new grams for {food_item.name} (current: {grams}g):"))
+            if new_grams is None:
                 return
+            try:
+                if not self.float_validation(str(new_grams)):
+                    messagebox.showerror("Error", "Please enter a valid number for grams.")
+            except ValueError:
+                messagebox.showerror("Error", "Please enter a valid number for grams.")
+                return
+            new_grams = float(new_grams)
             self.food_log.food_entries[selected_index] = (food_item, new_grams)
             nutrition = food_item.get_nutrition(new_grams)
             self.log_list.delete(selected_index)
@@ -281,16 +289,34 @@ class NutritionTrackerApp:
             total_fat = sum(food.get_nutrition(grams)['fat'] for food, grams in self.food_log.food_entries)
             self.summary.config(text=f"Total Calories: {total_calories:.1f}\nTotal Carbs: {total_carbs:.1f}g\nTotal Protein: {total_protein:.1f}g\nTotal Fat: {total_fat:.1f}g")
         
-    def float_validation(self, value_if_allowed):
+    def float_validation(self, value):
+        if value is None:
+            return False
+
         try:
-            if value_if_allowed == "":
-                return True
-            float(value_if_allowed)
+            value = float(value)
+
+            if value < 0:  # use <= 0 if you don't want to allow 0
+                return False
+
             return True
         except ValueError:
             return 
 
+    def int_validation(self, value):
+        if value is None:
+            return False
 
+        try:
+            value = int(value)
+
+            if value < 0:  # use <= 0 if you don't want to allow 0
+                return False
+
+            return True
+
+        except ValueError:
+            return False
         
     def non_empty_validation(self, value_if_allowed):
         try:
