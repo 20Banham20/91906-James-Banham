@@ -151,14 +151,24 @@ class NutritionTrackerApp:
         entry=messagebox.askquestion("Add Food", "Would you like to create a custom entry for the database?")
         if entry == 'yes':
             name = simpledialog.askstring("Food Name", "Enter the name of the food item:")
-            self.non_empty_validation(name)
-            calories = float(simpledialog.askstring("Calories per 100g", f"Enter calories per 100g for {name}:"))
-            carbs = float(simpledialog.askstring("Carbs per 100g", f"Enter carbs per 100g for {name}:"))
-            protein = float(simpledialog.askstring("Protein per 100g", f"Enter protein per 100g for {name}:"))
-            fat = float(simpledialog.askstring("Fat per 100g", f"Enter fat per 100g for {name}:"))
-            if not self.float_validation(str(fat,protein,carbs,calories)):
-                    messagebox.showerror("Error", "Please enter a valid number.")
-            new_food = FoodItem(name, calories, carbs, protein, fat)
+            if name is None:
+                return
+            if not self.non_empty_validation(name):
+                messagebox.showerror("Error", "Food name cannot be empty.")
+                return
+            calories = self.get_float(simpledialog.askstring("Calories per 100g",f"Enter calories per 100g for {name}:"))
+            if calories is None:
+                return
+            carbs = self.get_float(simpledialog.askstring("Carbs per 100g", f"Enter carbs per 100g for {name}:"))
+            if carbs is None:
+                return
+            protein = self.get_float(simpledialog.askstring("Protein per 100g", f"Enter protein per 100g for {name}:"))
+            if protein is None:
+                return
+            fat = self.get_float(simpledialog.askstring("Fat per 100g", f"Enter fat per 100g for {name}:"))
+            if fat is None:
+                return
+            new_food = FoodItem(name,calories, carbs, protein, fat)
             self.food_db.add_food_item(new_food)
             self.database_list.insert(tk.END,
                 f"{new_food.name} — {new_food.calories_per_100g} kcal | {new_food.carbs_per_100g}g carbs | {new_food.protein_per_100g}g protein | {new_food.fat_per_100g}g fat"
@@ -189,17 +199,23 @@ class NutritionTrackerApp:
                 messagebox.showerror("Error", "Food name cannot be empty.")
                 return
             else:
-                calories = float(simpledialog.askstring("Calories per 100g", f"Enter calories per 100g for {name}:"))
-                carbs = float(simpledialog.askstring("Carbs per 100g", f"Enter carbs per 100g for {name}:"))
-                protein = float(simpledialog.askstring("Protein per 100g", f"Enter protein per 100g for {name}:"))
-                fat = float(simpledialog.askstring("Fat per 100g", f"Enter fat per 100g for {name}:"))
-                if not self.float_validation(str(fat,protein,carbs,calories)):
-                    messagebox.showerror("Error", "Please enter a valid number.")
+                calories = self.get_float(simpledialog.askstring("Calories per 100g",f"Enter calories per 100g for {name}:"))
+                if calories is None:
+                    return
+                carbs = self.get_float(simpledialog.askstring("Carbs per 100g", f"Enter carbs per 100g for {name}:"))
+                if carbs is None:
+                    return
+                protein = self.get_float(simpledialog.askstring("Protein per 100g", f"Enter protein per 100g for {name}:"))
+                if protein is None:
+                    return
+                fat = self.get_float(simpledialog.askstring("Fat per 100g", f"Enter fat per 100g for {name}:"))
+                if fat is None:
+                    return
                 food_item.name = name
-                food_item.calories_per_100g = calories
-                food_item.carbs_per_100g = carbs
-                food_item.protein_per_100g = protein
-                food_item.fat_per_100g = fat
+                food_item.calories_per_100g =(calories)
+                food_item.carbs_per_100g = (carbs)
+                food_item.protein_per_100g = (protein)
+                food_item.fat_per_100g = float(fat)
                 self.database_list.delete(selected)
                 self.database_list.insert(selected,
                     f"{food_item.name} — {food_item.calories_per_100g} kcal | {food_item.carbs_per_100g}g carbs | {food_item.protein_per_100g}g protein | {food_item.fat_per_100g}g fat"
@@ -262,13 +278,14 @@ class NutritionTrackerApp:
             selected_index = self.log_list.curselection()[0]
             food_item, grams = self.food_log.food_entries[selected_index]
             new_grams = (simpledialog.askstring("Edit Grams", f"Enter new grams for {food_item.name} (current: {grams}g):"))
-            if new_grams is None:
-                return
             try:
                 if not self.float_validation(str(new_grams)):
                     messagebox.showerror("Error", "Please enter a valid number for grams.")
+                    return
             except ValueError:
                 messagebox.showerror("Error", "Please enter a valid number for grams.")
+                return
+            if new_grams is None:
                 return
             new_grams = float(new_grams)
             self.food_log.food_entries[selected_index] = (food_item, new_grams)
@@ -296,12 +313,12 @@ class NutritionTrackerApp:
         try:
             value = float(value)
 
-            if value < 0:  # use <= 0 if you don't want to allow 0
+            if value <= 0:  # use <= 0 if you don't want to allow 0
                 return False
 
             return True
         except ValueError:
-            return 
+            return False
 
     def int_validation(self, value):
         if value is None:
@@ -326,8 +343,25 @@ class NutritionTrackerApp:
         except ValueError:
             return False
     
-          
-        
+    def get_float(self,value):
+        if value is None:
+            return None
+
+        try:
+            value = float(value)
+
+            if value <= 0:
+                raise ValueError
+
+            return value
+
+        except ValueError:
+            messagebox.showerror(
+                "Error",
+                "Please enter a positive number."
+            )
+            return None
+            
         
 
 class Foodlog:
