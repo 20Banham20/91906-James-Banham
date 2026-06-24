@@ -8,5 +8,25 @@
       "fat_per_100g": 0.2
     },
     "grams": 200.0
+  },
+  {
+    "food_item": {
+      "name": "Tofu",
+      "calories_per_100g": 76,
+      "carbs_per_100g": 1.9,
+      "protein_per_100g": 8,
+      "fat_per_100g": 4.8
+    },
+    "grams": 70.0
+  },
+  {
+    "food_item": {
+      "name": "Egg White",
+      "calories_per_100g": 52,
+      "carbs_per_100g": 0.7,
+      "protein_per_100g": 11,
+      "fat_per_100g": 0.2
+    },
+    "grams": 100.0
   }
 ]

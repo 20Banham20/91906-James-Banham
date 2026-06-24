@@ -7,45 +7,325 @@
     "fat_per_100g": 3.6
   },
   {
+    "name": "Chicken Thigh",
+    "calories_per_100g": 209,
+    "carbs_per_100g": 0,
+    "protein_per_100g": 26,
+    "fat_per_100g": 10.9
+  },
+  {
+    "name": "Turkey Breast",
+    "calories_per_100g": 135,
+    "carbs_per_100g": 0,
+    "protein_per_100g": 30,
+    "fat_per_100g": 1.0
+  },
+  {
+    "name": "Lean Beef",
+    "calories_per_100g": 217,
+    "carbs_per_100g": 0,
+    "protein_per_100g": 26,
+    "fat_per_100g": 12
+  },
+  {
+    "name": "Minced Beef",
+    "calories_per_100g": 254,
+    "carbs_per_100g": 0.1,
+    "protein_per_100g": 22,
+    "fat_per_100g": 28
+  },
+  {
+    "name": "Pork Loin",
+    "calories_per_100g": 242,
+    "carbs_per_100g": 0,
+    "protein_per_100g": 27,
+    "fat_per_100g": 14
+  },
+  {
+    "name": "Salmon",
+    "calories_per_100g": 208,
+    "carbs_per_100g": 0,
+    "protein_per_100g": 20,
+    "fat_per_100g": 13
+  },
+  {
+    "name": "Tuna",
+    "calories_per_100g": 132,
+    "carbs_per_100g": 0,
+    "protein_per_100g": 29,
+    "fat_per_100g": 1.3
+  },
+  {
+    "name": "Cod",
+    "calories_per_100g": 82,
+    "carbs_per_100g": 0,
+    "protein_per_100g": 18,
+    "fat_per_100g": 0.7
+  },
+  {
+    "name": "Shrimp",
+    "calories_per_100g": 99,
+    "carbs_per_100g": 0.2,
+    "protein_per_100g": 24,
+    "fat_per_100g": 0.3
+  },
+  {
+    "name": "Egg",
+    "calories_per_100g": 143,
+    "carbs_per_100g": 0.7,
+    "protein_per_100g": 13,
+    "fat_per_100g": 10
+  },
+  {
+    "name": "Egg White",
+    "calories_per_100g": 52,
+    "carbs_per_100g": 0.7,
+    "protein_per_100g": 11,
+    "fat_per_100g": 0.2
+  },
+  {
     "name": "White Rice",
-    "calories_per_100g": 130,
+    "calories_per_100g": 129,
     "carbs_per_100g": 28,
     "protein_per_100g": 2.7,
     "fat_per_100g": 0.3
   },
   {
-    "name": "carrot",
-    "calories_per_100g": 41.0,
-    "carbs_per_100g": 9.6,
-    "protein_per_100g": 0.9,
+    "name": "Brown Rice",
+    "calories_per_100g": 123,
+    "carbs_per_100g": 25.6,
+    "protein_per_100g": 2.7,
+    "fat_per_100g": 1.0
+  },
+  {
+    "name": "Jasmine Rice",
+    "calories_per_100g": 130,
+    "carbs_per_100g": 28.5,
+    "protein_per_100g": 2.8,
+    "fat_per_100g": 0.3
+  },
+  {
+    "name": "Basmati Rice",
+    "calories_per_100g": 121,
+    "carbs_per_100g": 25.2,
+    "protein_per_100g": 3.5,
+    "fat_per_100g": 0.4
+  },
+  {
+    "name": "Potato",
+    "calories_per_100g": 104,
+    "carbs_per_100g": 20,
+    "protein_per_100g": 2.5,
     "fat_per_100g": 0.2
   },
   {
-    "name": "broccoli",
-    "calories_per_100g": 34.0,
+    "name": "Kumara",
+    "calories_per_100g": 86,
+    "carbs_per_100g": 20.1,
+    "protein_per_100g": 1.6,
+    "fat_per_100g": 0.2
+  },
+  {
+    "name": "Oats",
+    "calories_per_100g": 389,
+    "carbs_per_100g": 66,
+    "protein_per_100g": 17,
+    "fat_per_100g": 7
+  },
+  {
+    "name": "Whole Wheat Bread",
+    "calories_per_100g": 247,
+    "carbs_per_100g": 41,
+    "protein_per_100g": 13,
+    "fat_per_100g": 4.2
+  },
+  {
+    "name": "Pasta",
+    "calories_per_100g": 157,
+    "carbs_per_100g": 31,
+    "protein_per_100g": 5.8,
+    "fat_per_100g": 0.9
+  },
+  {
+    "name": "Quinoa",
+    "calories_per_100g": 120,
+    "carbs_per_100g": 21.3,
+    "protein_per_100g": 4.4,
+    "fat_per_100g": 1.9
+  },
+  {
+    "name": "Lentils",
+    "calories_per_100g": 116,
+    "carbs_per_100g": 20,
+    "protein_per_100g": 9,
+    "fat_per_100g": 0.4
+  },
+  {
+    "name": "Chickpeas",
+    "calories_per_100g": 164,
+    "carbs_per_100g": 27.4,
+    "protein_per_100g": 8.9,
+    "fat_per_100g": 2.6
+  },
+  {
+    "name": "Black Beans",
+    "calories_per_100g": 132,
+    "carbs_per_100g": 23.7,
+    "protein_per_100g": 8.9,
+    "fat_per_100g": 0.5
+  },
+  {
+    "name": "Kidney Beans",
+    "calories_per_100g": 127,
+    "carbs_per_100g": 22.8,
+    "protein_per_100g": 8.7,
+    "fat_per_100g": 0.5
+  },
+  {
+    "name": "Tofu",
+    "calories_per_100g": 76,
+    "carbs_per_100g": 1.9,
+    "protein_per_100g": 8,
+    "fat_per_100g": 4.8
+  },
+  {
+    "name": "Tempeh",
+    "calories_per_100g": 193,
+    "carbs_per_100g": 9.4,
+    "protein_per_100g": 20,
+    "fat_per_100g": 11
+  },
+  {
+    "name": "Greek Yogurt",
+    "calories_per_100g": 59,
+    "carbs_per_100g": 3.6,
+    "protein_per_100g": 10.3,
+    "fat_per_100g": 0.4
+  },
+  {
+    "name": "Cottage Cheese",
+    "calories_per_100g": 98,
+    "carbs_per_100g": 3.4,
+    "protein_per_100g": 11.1,
+    "fat_per_100g": 4.3
+  },
+  {
+    "name": "Cheddar Cheese",
+    "calories_per_100g": 403,
+    "carbs_per_100g": 1.3,
+    "protein_per_100g": 25,
+    "fat_per_100g": 33
+  },
+  {
+    "name": "Whole Milk",
+    "calories_per_100g": 61,
+    "carbs_per_100g": 4.8,
+    "protein_per_100g": 3.2,
+    "fat_per_100g": 3.3
+  },
+  {
+    "name": "Almonds",
+    "calories_per_100g": 579,
+    "carbs_per_100g": 22,
+    "protein_per_100g": 21,
+    "fat_per_100g": 50
+  },
+  {
+    "name": "Peanuts",
+    "calories_per_100g": 567,
+    "carbs_per_100g": 16,
+    "protein_per_100g": 26,
+    "fat_per_100g": 49
+  },
+  {
+    "name": "Walnuts",
+    "calories_per_100g": 654,
+    "carbs_per_100g": 14,
+    "protein_per_100g": 15,
+    "fat_per_100g": 65
+  },
+  {
+    "name": "Peanut Butter",
+    "calories_per_100g": 588,
+    "carbs_per_100g": 20,
+    "protein_per_100g": 25,
+    "fat_per_100g": 50
+  },
+  {
+    "name": "Avocado",
+    "calories_per_100g": 160,
+    "carbs_per_100g": 8.5,
+    "protein_per_100g": 2,
+    "fat_per_100g": 14.7
+  },
+  {
+    "name": "Broccoli",
+    "calories_per_100g": 34,
     "carbs_per_100g": 6.6,
     "protein_per_100g": 2.8,
     "fat_per_100g": 0.4
   },
   {
-    "name": "minced beef",
-    "calories_per_100g": 254.0,
-    "carbs_per_100g": 0.0,
-    "protein_per_100g": 17.17,
-    "fat_per_100g": 20.0
+    "name": "Spinach",
+    "calories_per_100g": 23,
+    "carbs_per_100g": 3.6,
+    "protein_per_100g": 2.9,
+    "fat_per_100g": 0.4
   },
   {
-    "name": "Potato",
-    "calories_per_100g": 77.0,
-    "carbs_per_100g": 17.58,
-    "protein_per_100g": 2.02,
+    "name": "Carrot",
+    "calories_per_100g": 41,
+    "carbs_per_100g": 9.6,
+    "protein_per_100g": 0.8,
     "fat_per_100g": 0.1
   },
   {
-    "name": "Kumara",
-    "calories_per_100g": 86.0,
-    "carbs_per_100g": 20.1,
-    "protein_per_100g": 1.6,
+    "name": "Cauliflower",
+    "calories_per_100g": 25,
+    "carbs_per_100g": 5,
+    "protein_per_100g": 1.9,
+    "fat_per_100g": 0.3
+  },
+  {
+    "name": "Green Beans",
+    "calories_per_100g": 31,
+    "carbs_per_100g": 7,
+    "protein_per_100g": 1.8,
     "fat_per_100g": 0.2
+  },
+  {
+    "name": "Apple",
+    "calories_per_100g": 52,
+    "carbs_per_100g": 13.8,
+    "protein_per_100g": 0.3,
+    "fat_per_100g": 0.2
+  },
+  {
+    "name": "Banana",
+    "calories_per_100g": 89,
+    "carbs_per_100g": 22.8,
+    "protein_per_100g": 1.1,
+    "fat_per_100g": 0.3
+  },
+  {
+    "name": "Orange",
+    "calories_per_100g": 47,
+    "carbs_per_100g": 11.8,
+    "protein_per_100g": 0.9,
+    "fat_per_100g": 0.1
+  },
+  {
+    "name": "Blueberries",
+    "calories_per_100g": 57,
+    "carbs_per_100g": 14.5,
+    "protein_per_100g": 0.7,
+    "fat_per_100g": 0.3
+  },
+  {
+    "name": "Strawberries",
+    "calories_per_100g": 32,
+    "carbs_per_100g": 7.7,
+    "protein_per_100g": 0.7,
+    "fat_per_100g": 0.3
   }
 ]
