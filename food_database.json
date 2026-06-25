@@ -84,13 +84,6 @@
     "fat_per_100g": 0.2
   },
   {
-    "name": "White Rice",
-    "calories_per_100g": 129,
-    "carbs_per_100g": 28,
-    "protein_per_100g": 2.7,
-    "fat_per_100g": 0.3
-  },
-  {
     "name": "Brown Rice",
     "calories_per_100g": 123,
     "carbs_per_100g": 25.6,
@@ -133,13 +126,6 @@
     "fat_per_100g": 7
   },
   {
-    "name": "Whole Wheat Bread",
-    "calories_per_100g": 247,
-    "carbs_per_100g": 41,
-    "protein_per_100g": 13,
-    "fat_per_100g": 4.2
-  },
-  {
     "name": "Pasta",
     "calories_per_100g": 157,
     "carbs_per_100g": 31,
@@ -166,13 +152,6 @@
     "carbs_per_100g": 27.4,
     "protein_per_100g": 8.9,
     "fat_per_100g": 2.6
-  },
-  {
-    "name": "Black Beans",
-    "calories_per_100g": 132,
-    "carbs_per_100g": 23.7,
-    "protein_per_100g": 8.9,
-    "fat_per_100g": 0.5
   },
   {
     "name": "Kidney Beans",

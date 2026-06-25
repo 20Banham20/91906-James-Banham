@@ -28,5 +28,15 @@
       "fat_per_100g": 0.2
     },
     "grams": 100.0
+  },
+  {
+    "food_item": {
+      "name": "Orange",
+      "calories_per_100g": 47,
+      "carbs_per_100g": 11.8,
+      "protein_per_100g": 0.9,
+      "fat_per_100g": 0.1
+    },
+    "grams": 50.0
   }
 ]
