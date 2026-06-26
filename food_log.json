@@ -12,9 +12,9 @@
   {
     "food_item": {
       "name": "Tofu",
-      "calories_per_100g": 76,
+      "calories_per_100g": 76.0,
       "carbs_per_100g": 1.9,
-      "protein_per_100g": 8,
+      "protein_per_100g": 8.0,
       "fat_per_100g": 4.8
     },
     "grams": 70.0
@@ -22,21 +22,11 @@
   {
     "food_item": {
       "name": "Egg White",
-      "calories_per_100g": 52,
+      "calories_per_100g": 52.0,
       "carbs_per_100g": 0.7,
-      "protein_per_100g": 11,
+      "protein_per_100g": 11.0,
       "fat_per_100g": 0.2
     },
     "grams": 100.0
-  },
-  {
-    "food_item": {
-      "name": "Orange",
-      "calories_per_100g": 47,
-      "carbs_per_100g": 11.8,
-      "protein_per_100g": 0.9,
-      "fat_per_100g": 0.1
-    },
-    "grams": 50.0
   }
 ]
